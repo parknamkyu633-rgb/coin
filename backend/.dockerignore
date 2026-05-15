@@ -1,0 +1,7 @@
+node_modules
+dist
+.env
+uploads
+dev.db
+*.db
+.git

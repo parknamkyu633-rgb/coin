@@ -1,0 +1,26 @@
+node_modules/
+.env
+dist/
+*.log
+.expo/
+android/
+ios/
+
+# DB 파일
+*.db
+*.db-shm
+*.db-wal
+
+# 업로드 이미지 (로컬 개발용)
+backend/uploads/
+
+# Prisma 생성 파일
+backend/src/generated/
+
+# 테스트/IDE 자동생성
+.playwright-mcp/
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db

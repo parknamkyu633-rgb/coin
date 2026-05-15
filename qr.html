@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heritcoin — Expo Go QR</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #111;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card {
+    background: #1c1c1e;
+    border-radius: 24px;
+    padding: 40px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .logo { font-size: 40px; margin-bottom: 8px; }
+  h1 { color: #f59e0b; font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .subtitle { color: #9ca3af; font-size: 14px; margin-bottom: 28px; }
+  #qrcode {
+    background: white;
+    padding: 16px;
+    border-radius: 16px;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+  .url-box {
+    background: #2c2c2e;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+  .url-label { color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .url { color: #f59e0b; font-family: monospace; font-size: 14px; word-break: break-all; }
+  .steps { text-align: left; }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #2c2c2e;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    background: #f59e0b;
+    color: #000;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text { color: #d1d5db; font-size: 14px; line-height: 1.5; }
+  .step-text strong { color: #fff; }
+  .badge {
+    display: inline-block;
+    background: #2c2c2e;
+    color: #9ca3af;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-top: 16px;
+  }
+  .badge span { color: #10b981; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🪙</div>
+  <h1>Heritcoin</h1>
+  <p class="subtitle">Expo Go로 스캔하여 앱을 실행하세요</p>
+
+  <div id="qrcode"></div>
+
+  <div class="url-box">
+    <div class="url-label">연결 주소</div>
+    <div class="url" id="exp-url">exp://192.168.0.8:8081</div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        스마트폰에 <strong>Expo Go</strong> 앱 설치<br>
+        <small style="color:#6b7280">App Store / Google Play</small>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        PC와 <strong>같은 Wi-Fi</strong> 네트워크에 연결
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        Expo Go 앱에서 <strong>"Scan QR code"</strong> 탭으로 위 QR 코드 스캔
+      </div>
+    </div>
+  </div>
+
+  <div class="badge">Metro Bundler <span>● 실행 중</span> · 192.168.0.8:8081</div>
+</div>
+
+<script>
+  const url = 'exp://192.168.0.8:8081';
+  new QRCode(document.getElementById('qrcode'), {
+    text: url,
+    width: 220,
+    height: 220,
+    colorDark: '#000000',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>

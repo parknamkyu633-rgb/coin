@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Scan {
+  id         String   @id @default(uuid())
+  deviceId   String
+  frontUrl   String
+  backUrl    String?
+  result     Json
+  coinName   String?
+  year       String?
+  country    String?
+  rarity     String?
+  confidence Float?
+  marketMin  Float?
+  marketMax  Float?
+  createdAt  DateTime @default(now())
+  device     Device   @relation(fields: [deviceId], references: [id])
+}
+
+model Listing {
+  id          String   @id @default(uuid())
+  deviceId    String
+  scanId      String?
+  title       String
+  price       Float
+  imageUrls   String   @default("[]")
+  description String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  device      Device   @relation(fields: [deviceId], references: [id])
+  chatRoom    ChatRoom?
+}
+
+model CoinMeta {
+  id       String  @id
+  name     String
+  country  String
+  year     String
+  material String
+  weight   Float?
+  diameter Float?
+  rarity   String
+  variants Json?
+  imageRef String?
+}
+
+// 전문가 감정 의뢰
+model Appraisal {
+  id          String    @id @default(uuid())
+  deviceId    String
+  scanId      String?
+  tier        String    // "basic" | "premium"
+  price       Int       // 원 단위
+  status      String    @default("pending") // pending | paid | reviewing | done
+  condition   String?   // 상태 설명
+  note        String?   // 추가 문의
+  imageUrls   String   @default("[]")
+  paymentId   String?   // PortOne 결제 ID
+  expertNote  String?   // 감정사 결과
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  device      Device    @relation(fields: [deviceId], references: [id])
+}
+
+// 거래 채팅방
+model ChatRoom {
+  id        String    @id @default(uuid())
+  listingId String    @unique
+  createdAt DateTime  @default(now())
+  messages  Message[]
+  listing   Listing   @relation(fields: [listingId], references: [id])
+}
+
+// 채팅 메시지
+model Message {
+  id         String   @id @default(uuid())
+  roomId     String
+  senderDeviceId String
+  text       String
+  createdAt  DateTime @default(now())
+  room       ChatRoom @relation(fields: [roomId], references: [id])
+}
+
+model Device {
+  id          String      @id @default(uuid())
+  deviceId    String      @unique
+  createdAt   DateTime    @default(now())
+  scans       Scan[]
+  listings    Listing[]
+  appraisals  Appraisal[]
+}
