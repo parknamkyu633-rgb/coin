@@ -5,9 +5,8 @@
 
 set -e
 
-DOMAIN="api.heritcoin.com"
 APP_DIR="/opt/heritcoin"
-REPO_URL="https://github.com/YOUR_USERNAME/heritcoin.git"   # ← 실제 레포 주소로 변경
+REPO_URL="https://github.com/parknamkyu633-rgb/coin.git"
 
 echo "=== 1. 패키지 업데이트 ==="
 apt-get update && apt-get upgrade -y
@@ -24,8 +23,8 @@ apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 systemctl enable docker
 
-echo "=== 3. Nginx + Certbot 설치 ==="
-apt-get install -y nginx certbot python3-certbot-nginx
+echo "=== 3. Nginx 설치 ==="
+apt-get install -y nginx
 
 echo "=== 4. 앱 디렉터리 설정 ==="
 mkdir -p "$APP_DIR"
@@ -47,17 +46,10 @@ EOF
 echo ">>> backend/.env 생성됨 — 실제 값으로 편집하세요: nano $APP_DIR/backend/.env"
 
 echo "=== 6. Nginx 설정 복사 ==="
-# 도메인 이름을 실제 값으로 교체
-sed "s/api.heritcoin.com/$DOMAIN/g" "$APP_DIR/deploy/nginx.conf" \
-  > /etc/nginx/sites-available/heritcoin
+cp "$APP_DIR/deploy/nginx.conf" /etc/nginx/sites-available/heritcoin
 ln -sf /etc/nginx/sites-available/heritcoin /etc/nginx/sites-enabled/heritcoin
 rm -f /etc/nginx/sites-enabled/default
 nginx -t && systemctl reload nginx
-
-echo "=== 7. SSL 인증서 발급 (Let's Encrypt) ==="
-echo ">>> 도메인 DNS가 이 서버 IP를 가리키고 있어야 합니다."
-certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos -m parknamkyu633@gmail.com
-systemctl enable certbot.timer
 
 echo "=== 8. Docker 서비스 시작 ==="
 cd "$APP_DIR"
@@ -72,4 +64,5 @@ echo "    EC2_SSH_KEY = (로컬에서 생성한 SSH 개인키)"
 
 echo ""
 echo "=== 완료! ==="
-echo "API 확인: https://$DOMAIN/health"
+PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+echo "API 확인: http://$PUBLIC_IP/health"

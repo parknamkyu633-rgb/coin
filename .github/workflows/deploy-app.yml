@@ -1,0 +1,37 @@
+name: Deploy App (EAS)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/deploy-app.yml'
+
+jobs:
+  build-and-submit:
+    name: EAS Build & Submit (Android)
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: cd app && npm ci
+
+      - name: Build (Android AAB)
+        run: cd app && eas build --platform android --profile production --non-interactive
+
+      - name: Submit to Play Store (Internal Track)
+        run: cd app && eas submit --platform android --profile production --non-interactive
