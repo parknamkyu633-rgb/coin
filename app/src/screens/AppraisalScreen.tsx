@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -104,6 +105,21 @@ export default function AppraisalScreen() {
       />
 
       <Text style={styles.label}>추가 사진 ({images.length}장)</Text>
+      {images.length > 0 && (
+        <View style={styles.photoGrid}>
+          {images.map((uri, i) => (
+            <View key={i} style={styles.photoThumbWrap}>
+              <Image source={{ uri }} style={styles.photoThumb} />
+              <TouchableOpacity
+                style={styles.photoRemove}
+                onPress={() => setImages((prev) => prev.filter((_, j) => j !== i))}
+              >
+                <Text style={styles.photoRemoveText}>✕</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      )}
       <TouchableOpacity style={styles.photoBtn} onPress={pickImage}>
         <Text style={styles.photoBtnText}>+ 사진 추가</Text>
       </TouchableOpacity>
@@ -165,6 +181,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   photoBtnText: { color: '#6b7280', fontSize: 14 },
+  photoGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 10 },
+  photoThumbWrap: { position: 'relative' },
+  photoThumb: { width: 80, height: 80, borderRadius: 8 },
+  photoRemove: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    backgroundColor: '#ef4444',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  photoRemoveText: { color: '#fff', fontSize: 10, fontWeight: '700' },
   submitBtn: {
     backgroundColor: '#f59e0b',
     borderRadius: 12,
