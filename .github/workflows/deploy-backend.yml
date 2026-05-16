@@ -1,4 +1,4 @@
-name: Deploy Backend # v3
+name: Deploy Backend # v4
 
 on:
   push:
@@ -12,7 +12,6 @@ jobs:
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
-    environment: production
 
     steps:
       - uses: actions/checkout@v4
