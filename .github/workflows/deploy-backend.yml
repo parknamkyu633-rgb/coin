@@ -33,8 +33,8 @@ jobs:
             # 이전 이미지 빌드 캐시 활용하여 재빌드
             docker compose --profile full build api
 
-            # DB 마이그레이션 적용 (새 컨테이너 임시 실행)
-            docker compose --profile full run --rm api npx prisma migrate deploy
+            # DB 스키마 동기화
+            docker compose --profile full run --rm api npx prisma db push --accept-data-loss
 
             # 무중단 재시작 (새 컨테이너 올리고 → 구 컨테이너 종료)
             docker compose --profile full up -d --no-deps api

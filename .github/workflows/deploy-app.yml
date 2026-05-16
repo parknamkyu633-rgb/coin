@@ -32,6 +32,3 @@ jobs:
 
       - name: Build (Android AAB)
         run: cd app && eas build --platform android --profile production --non-interactive
-
-      - name: Submit to Play Store (Internal Track)
-        run: cd app && eas submit --platform android --profile production --non-interactive
