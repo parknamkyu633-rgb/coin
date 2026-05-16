@@ -1,4 +1,4 @@
-name: Deploy Backend # v5
+name: Deploy Backend # v6
 
 on:
   push:
@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Test network connectivity
+        run: |
+          echo "Testing port 22 connectivity..."
+          nc -zv -w 5 ${{ secrets.SERVER_HOST }} 22 && echo "Port 22 OPEN" || echo "Port 22 CLOSED/TIMEOUT"
+          nc -zv -w 5 ${{ secrets.SERVER_HOST }} ${{ secrets.SERVER_PORT }} && echo "SERVER_PORT OPEN" || echo "SERVER_PORT CLOSED/TIMEOUT"
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -23,6 +29,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.SERVER_PORT }}
+          debug: true
           script: |
             set -e
             cd /opt/heritcoin
