@@ -25,11 +25,10 @@ COPY prisma ./prisma/
 
 RUN npm ci --omit=dev
 
-# builder에서 생성된 Prisma 클라이언트 복사
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
-
 COPY --from=builder /app/dist ./dist/
+
+# Prisma 생성 파일(JS + 네이티브 바이너리)을 dist/generated 로 복사
+COPY --from=builder /app/src/generated ./dist/generated
 
 RUN mkdir -p uploads
 
