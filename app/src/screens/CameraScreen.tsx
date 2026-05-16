@@ -83,7 +83,8 @@ export default function CameraScreen() {
       navigation.navigate('Result');
     } catch (e: any) {
       const msg = e?.response?.data?.error ?? e?.message ?? '알 수 없는 오류';
-      Alert.alert('분석 실패', msg);
+      const url = e?.config?.url ?? '';
+      Alert.alert('분석 실패', `${msg}\n${url}`);
     } finally {
       setLoading(false);
     }
