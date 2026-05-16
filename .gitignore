@@ -24,3 +24,8 @@ backend/src/generated/
 # OS
 .DS_Store
 Thumbs.db
+
+# QR 코드 임시 파일
+app/qr.html
+app/qr.svg
+app/gen-qr.js
