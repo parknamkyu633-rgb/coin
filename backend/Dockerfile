@@ -1,6 +1,8 @@
 # ---- build stage ----
 FROM node:20-slim AS builder
 
+RUN apt-get update -y && apt-get install -y openssl
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -17,6 +19,8 @@ RUN npm run build
 
 # ---- production stage ----
 FROM node:20-slim AS runner
+
+RUN apt-get update -y && apt-get install -y openssl
 
 WORKDIR /app
 
