@@ -23,8 +23,11 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# prod 의존성만 설치 + Prisma 클라이언트 재생성 (Linux 네이티브 바이너리)
-RUN npm ci --omit=dev && npx prisma generate
+RUN npm ci --omit=dev
+
+# builder에서 생성된 Prisma 클라이언트 복사
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
 
 COPY --from=builder /app/dist ./dist/
 
