@@ -91,15 +91,13 @@ export default function CameraScreen() {
 
   return (
     <View style={styles.container}>
-      <CameraView ref={cameraRef} style={styles.camera} facing="back" animateShutter={false}>
-        {/* 원형 가이드 오버레이 */}
-        <View style={styles.overlay}>
-          <View style={styles.circle} />
-          <Text style={styles.guide}>
-            {step === 'front' ? '동전 앞면을 원 안에 맞춰주세요' : '동전 뒷면을 촬영하세요'}
-          </Text>
-        </View>
-      </CameraView>
+      <CameraView ref={cameraRef} style={styles.camera} facing="back" animateShutter={false} />
+      <View style={styles.overlay} pointerEvents="none">
+        <View style={styles.circle} />
+        <Text style={styles.guide}>
+          {step === 'front' ? '동전 앞면을 원 안에 맞춰주세요' : '동전 뒷면을 촬영하세요'}
+        </Text>
+      </View>
 
       <View style={styles.controls}>
         <TouchableOpacity style={styles.iconBtn} onPress={pickFromGallery}>
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#000' },
   camera: { flex: 1 },
   overlay: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
   },

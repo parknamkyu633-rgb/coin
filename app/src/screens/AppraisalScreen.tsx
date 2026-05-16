@@ -11,9 +11,6 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Payment, type PortOneController } from '@portone/react-native-sdk';
-import type { PaymentRequest, PaymentResponse } from '@portone/browser-sdk/v2';
-import { useRef } from 'react';
 import { api } from '../services/api';
 
 const TIERS = [
@@ -32,11 +29,7 @@ export default function AppraisalScreen() {
   const [condition, setCondition] = useState('');
   const [note, setNote] = useState('');
   const [images, setImages] = useState<string[]>([]);
-  const [step, setStep] = useState<'form' | 'payment'>('form');
-  const [appraisalId, setAppraisalId] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const paymentRef = useRef<PortOneController>(null);
 
   const selectedTier = TIERS.find((t) => t.key === tier)!;
 
@@ -54,15 +47,16 @@ export default function AppraisalScreen() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const { data } = await api.post('/api/appraisals', {
+      await api.post('/api/appraisals', {
         tier,
         scanId,
         condition,
         note,
         imageUrls: images,
       });
-      setAppraisalId(data.appraisalId);
-      setStep('payment');
+      Alert.alert('접수 완료', '감정 의뢰가 접수됐습니다.\n결제 기능은 준비 중입니다.', [
+        { text: '확인', onPress: () => navigation.goBack() },
+      ]);
     } catch {
       Alert.alert('오류', '의뢰 등록에 실패했습니다.');
     } finally {
@@ -70,56 +64,10 @@ export default function AppraisalScreen() {
     }
   };
 
-  const handlePaymentDone = async (paymentId: string) => {
-    try {
-      await api.post(`/api/appraisals/${appraisalId}/verify-payment`, { paymentId });
-      Alert.alert('결제 완료', '감정 의뢰가 접수됐습니다. 결과는 알림으로 안내됩니다.', [
-        { text: '확인', onPress: () => navigation.goBack() },
-      ]);
-    } catch {
-      Alert.alert('검증 실패', '결제 검증에 실패했습니다. 고객센터에 문의해주세요.');
-    }
-  };
-
-  const handlePaymentComplete = (response: PaymentResponse) => {
-    if (response.code) {
-      Alert.alert('결제 실패', response.message ?? '결제가 취소됐습니다.');
-      return;
-    }
-    handlePaymentDone(response.paymentId);
-  };
-
-  if (step === 'payment') {
-    const storeId = process.env.EXPO_PUBLIC_PORTONE_STORE_ID ?? '';
-    const channelKey = process.env.EXPO_PUBLIC_PORTONE_CHANNEL_KEY ?? '';
-    const paymentId = `appraisal-${appraisalId}-${Date.now()}`;
-    const paymentRequest = {
-      storeId,
-      channelKey,
-      paymentId,
-      orderName: selectedTier.label,
-      totalAmount: selectedTier.price,
-      currency: 'KRW',
-      payMethod: 'CARD',
-    } as PaymentRequest;
-
-    return (
-      <View style={{ flex: 1 }}>
-        <Payment
-          ref={paymentRef}
-          request={paymentRequest}
-          onComplete={handlePaymentComplete}
-          onError={(error) => Alert.alert('결제 실패', error.message)}
-        />
-      </View>
-    );
-  }
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>전문가 감정 의뢰</Text>
 
-      {/* 등급 선택 */}
       <Text style={styles.label}>감정 등급</Text>
       <View style={styles.tierRow}>
         {TIERS.map((t) => (
@@ -137,7 +85,6 @@ export default function AppraisalScreen() {
         ))}
       </View>
 
-      {/* 상태 설명 */}
       <Text style={styles.label}>코인 상태</Text>
       <TextInput
         style={styles.input}
@@ -147,7 +94,6 @@ export default function AppraisalScreen() {
         multiline
       />
 
-      {/* 추가 문의 */}
       <Text style={styles.label}>추가 문의 (선택)</Text>
       <TextInput
         style={[styles.input, styles.inputTall]}
@@ -157,7 +103,6 @@ export default function AppraisalScreen() {
         multiline
       />
 
-      {/* 추가 사진 */}
       <Text style={styles.label}>추가 사진 ({images.length}장)</Text>
       <TouchableOpacity style={styles.photoBtn} onPress={pickImage}>
         <Text style={styles.photoBtnText}>+ 사진 추가</Text>
@@ -172,7 +117,7 @@ export default function AppraisalScreen() {
           <ActivityIndicator color="#fff" />
         ) : (
           <Text style={styles.submitBtnText}>
-            결제하기 ₩{selectedTier.price.toLocaleString()}
+            의뢰 신청 ₩{selectedTier.price.toLocaleString()}
           </Text>
         )}
       </TouchableOpacity>

@@ -22,7 +22,10 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.heritcoin.app"
+      "package": "com.heritcoin.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,6 +38,11 @@
           "photosPermission": "갤러리에서 사진을 선택하기 위해 접근 권한이 필요합니다."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "64d6e6b8-5b04-47e5-a9e2-17e43e6e976d"
+      }
+    }
   }
 }
