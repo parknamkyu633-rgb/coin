@@ -18,13 +18,7 @@ jobs:
 
       - name: Test network connectivity
         run: |
-          echo "=== GitHub Actions Runner IP ==="
-          curl -s ifconfig.me || echo "curl failed"
-          echo ""
-          echo "=== Hardcoded IP port 22 test ==="
-          nc -zv -w 5 18.218.248.95 22 && echo "Port 22 OPEN" || echo "Port 22 CLOSED/TIMEOUT"
-          echo "=== Hardcoded IP port 80 test ==="
-          nc -zv -w 5 18.218.248.95 80 && echo "Port 80 OPEN" || echo "Port 80 CLOSED/TIMEOUT"
+          nc -zv -w 5 ${{ secrets.SERVER_HOST }} 22 && echo "Port 22 OPEN" || echo "Port 22 CLOSED/TIMEOUT"
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
