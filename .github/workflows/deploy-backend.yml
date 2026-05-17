@@ -30,7 +30,7 @@ jobs:
           echo "=== Key first line ===" && head -1 ~/.ssh/deploy_key
           ssh-keygen -y -f ~/.ssh/deploy_key 2>&1 | head -c 30 && echo ""
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          ssh -i ~/.ssh/deploy_key \
+          ssh -v -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=no \
             -p "$SSH_PORT" \
             "$SSH_USER@$SSH_HOST" \
