@@ -54,7 +54,7 @@ app.get('/', async () => ({
   health: '/health',
 }));
 
-app.get('/health', async () => ({ status: 'ok', version: '1.0.0' }));
+app.get('/health', async () => ({ status: 'ok', version: '1.0.1' }));
 
 const PORT = Number(process.env.PORT ?? 3000);
 
