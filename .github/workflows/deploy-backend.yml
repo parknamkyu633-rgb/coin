@@ -17,25 +17,24 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Deploy via SSH
+        env:
+          SSH_KEY: ${{ secrets.SERVER_KEY }}
+          SSH_HOST: ${{ secrets.SERVER_HOST }}
+          SSH_USER: ${{ secrets.SERVER_USER }}
+          SSH_PORT: ${{ secrets.SERVER_PORT }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SERVER_KEY }}" > ~/.ssh/deploy_key
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SERVER_PORT }} \
-            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-          set -e
-          cd /opt/heritcoin
-
-          git pull origin main
-
-          docker compose --profile full build api
-
-          docker compose --profile full run --rm api npx prisma db push --accept-data-loss
-
-          docker compose --profile full up -d --no-deps api
-
-          docker image prune -f --filter "until=30m"
-          ENDSSH
+            -p "$SSH_PORT" \
+            "$SSH_USER@$SSH_HOST" \
+            "set -e
+            cd /opt/heritcoin
+            git pull origin main
+            docker compose --profile full build api
+            docker compose --profile full run --rm api npx prisma db push --accept-data-loss
+            docker compose --profile full up -d --no-deps api
+            docker image prune -f --filter 'until=30m'"
