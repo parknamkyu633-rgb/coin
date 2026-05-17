@@ -24,8 +24,11 @@ jobs:
           SSH_PORT: ${{ secrets.SERVER_PORT }}
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          echo "=== Key line count ===" && wc -l ~/.ssh/deploy_key
+          echo "=== Key first line ===" && head -1 ~/.ssh/deploy_key
+          ssh-keygen -y -f ~/.ssh/deploy_key 2>&1 | head -c 30 && echo ""
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=no \
