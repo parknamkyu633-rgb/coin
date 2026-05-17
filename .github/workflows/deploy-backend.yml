@@ -18,9 +18,13 @@ jobs:
 
       - name: Test network connectivity
         run: |
-          echo "Testing port 22 connectivity..."
+          echo "=== GitHub Actions Runner IP ==="
+          curl -s ifconfig.me
+          echo ""
+          echo "=== Port 22 test ==="
           nc -zv -w 5 ${{ secrets.SERVER_HOST }} 22 && echo "Port 22 OPEN" || echo "Port 22 CLOSED/TIMEOUT"
-          nc -zv -w 5 ${{ secrets.SERVER_HOST }} ${{ secrets.SERVER_PORT }} && echo "SERVER_PORT OPEN" || echo "SERVER_PORT CLOSED/TIMEOUT"
+          echo "=== Port 80 test ==="
+          nc -zv -w 5 ${{ secrets.SERVER_HOST }} 80 && echo "Port 80 OPEN" || echo "Port 80 CLOSED/TIMEOUT"
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
