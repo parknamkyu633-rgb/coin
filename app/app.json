@@ -32,7 +32,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "@sentry/react-native/expo",
+      [
+        "@sentry/react-native/expo",
+        {
+          "uploadNativeSymbols": false,
+          "autoUploadNativeSymbols": false
+        }
+      ],
       "expo-secure-store",
       [
         "expo-image-picker",
