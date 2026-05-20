@@ -1,4 +1,14 @@
 import 'dotenv/config';
+import * as Sentry from '@sentry/node';
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV ?? 'development',
+    tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 1.0,
+  });
+}
+
 import Fastify from 'fastify';
 import type { FastifyError } from 'fastify';
 import multipart from '@fastify/multipart';
@@ -37,6 +47,7 @@ app.register(staticFiles, { root: UPLOADS_DIR, prefix: '/uploads/' });
 app.setErrorHandler((error: FastifyError, req, reply) => {
   req.log.error({ err: error }, 'Unhandled error');
   const status = error.statusCode ?? 500;
+  if (status >= 500) Sentry.captureException(error);
   reply.status(status).send({
     error: status < 500 ? error.message : '서버 오류가 발생했습니다.',
   });
