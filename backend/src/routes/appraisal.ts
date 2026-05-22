@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import * as PortOne from '@portone/server-sdk';
 import prisma from '../services/prisma';
 import { validateDeviceId } from '../utils/validateDeviceId';
+import { sendPushNotification } from '../services/pushNotification';
 
 const TIERS = {
   basic: { price: 5000, label: '기본 감정' },
@@ -90,6 +91,38 @@ export async function appraisalRoutes(app: FastifyInstance) {
     });
 
     return reply.send({ ok: true, status: 'paid' });
+  });
+
+  // 감정 결과 등록 (어드민 — 결과 입력 시 푸시 알림 발송)
+  app.patch('/api/appraisals/:id/result', async (req, reply) => {
+    const { id } = req.params as { id: string };
+    const { expertNote, adminSecret } = req.body as { expertNote: string; adminSecret: string };
+
+    if (adminSecret !== process.env.ADMIN_SECRET) {
+      return reply.status(403).send({ error: '권한 없음' });
+    }
+
+    const appraisal = await prisma.appraisal.findUnique({
+      where: { id },
+      include: { device: true },
+    });
+    if (!appraisal) return reply.status(404).send({ error: '의뢰 없음' });
+
+    await prisma.appraisal.update({
+      where: { id },
+      data: { status: 'done', expertNote },
+    });
+
+    if (appraisal.device.pushToken) {
+      await sendPushNotification(
+        appraisal.device.pushToken,
+        '감정 결과가 도착했습니다',
+        '전문가 감정이 완료됐습니다. 결과를 확인하세요.',
+        { appraisalId: id }
+      );
+    }
+
+    return reply.send({ ok: true });
   });
 
   // 내 감정 의뢰 목록

@@ -91,6 +91,7 @@ model Message {
 model Device {
   id          String      @id @default(uuid())
   deviceId    String      @unique
+  pushToken   String?
   createdAt   DateTime    @default(now())
   scans       Scan[]
   listings    Listing[]

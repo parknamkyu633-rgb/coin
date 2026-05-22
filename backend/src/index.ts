@@ -22,6 +22,7 @@ import { listingRoutes } from './routes/listings';
 import { appraisalRoutes } from './routes/appraisal';
 import { chatRoutes } from './routes/chat';
 import { uploadRoutes } from './routes/upload';
+import { deviceRoutes } from './routes/devices';
 import { initSocketIO } from './services/socketServer';
 
 const UPLOADS_DIR = path.resolve(process.cwd(), 'uploads');
@@ -62,6 +63,7 @@ app.register(listingRoutes);
 app.register(appraisalRoutes);
 app.register(chatRoutes);
 app.register(uploadRoutes);
+app.register(deviceRoutes);
 
 app.get('/', async () => ({
   name: 'Heritcoin API',
