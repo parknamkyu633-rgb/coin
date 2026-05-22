@@ -73,6 +73,11 @@ app.get('/health', async () => ({ status: 'ok', version: '1.0.1' }));
 
 app.get('/sentry-test', async () => { throw new Error('[테스트] Sentry 500 에러 캡처 확인'); });
 
+app.get('/sentry-message', async () => {
+  Sentry.captureMessage('[테스트] Sentry 메시지 전송 확인');
+  return { sent: true };
+});
+
 const PORT = Number(process.env.PORT ?? 3000);
 
 app.listen({ port: PORT, host: '0.0.0.0' }, (err) => {
