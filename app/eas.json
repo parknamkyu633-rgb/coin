@@ -14,7 +14,9 @@
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_API_URL": "http://18.218.248.95",
-        "EXPO_PUBLIC_SENTRY_DSN": "https://c21ef5fd7d794e04eac978dbfd631e00@o4511415734697984.ingest.us.sentry.io/4511415760453632"
+        "EXPO_PUBLIC_SENTRY_DSN": "https://c21ef5fd7d794e04eac978dbfd631e00@o4511415734697984.ingest.us.sentry.io/4511415760453632",
+        "EXPO_PUBLIC_PORTONE_STORE_ID": "store-84b5759a-1d55-457e-a148-bc5eb7ca22c8",
+        "EXPO_PUBLIC_PORTONE_CHANNEL_KEY": ""
       }
     },
     "production": {
@@ -24,7 +26,9 @@
       "autoIncrement": true,
       "env": {
         "EXPO_PUBLIC_API_URL": "http://18.218.248.95",
-        "EXPO_PUBLIC_SENTRY_DSN": "https://c21ef5fd7d794e04eac978dbfd631e00@o4511415734697984.ingest.us.sentry.io/4511415760453632"
+        "EXPO_PUBLIC_SENTRY_DSN": "https://c21ef5fd7d794e04eac978dbfd631e00@o4511415734697984.ingest.us.sentry.io/4511415760453632",
+        "EXPO_PUBLIC_PORTONE_STORE_ID": "store-84b5759a-1d55-457e-a148-bc5eb7ca22c8",
+        "EXPO_PUBLIC_PORTONE_CHANNEL_KEY": ""
       }
     }
   },
