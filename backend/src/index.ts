@@ -29,6 +29,10 @@ if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 const app = Fastify({ logger: true });
 
+if (process.env.SENTRY_DSN) {
+  Sentry.setupFastifyErrorHandler(app);
+}
+
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
   : [];
@@ -66,6 +70,8 @@ app.get('/', async () => ({
 }));
 
 app.get('/health', async () => ({ status: 'ok', version: '1.0.1' }));
+
+app.get('/sentry-test', async () => { throw new Error('[테스트] Sentry 500 에러 캡처 확인'); });
 
 const PORT = Number(process.env.PORT ?? 3000);
 
