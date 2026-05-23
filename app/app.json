@@ -33,13 +33,6 @@
     },
     "plugins": [
       "@portone/react-native-sdk/plugin",
-      [
-        "@sentry/react-native/expo",
-        {
-          "uploadNativeSymbols": false,
-          "autoUploadNativeSymbols": false
-        }
-      ],
       "expo-secure-store",
       [
         "expo-notifications",
