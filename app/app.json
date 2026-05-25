@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "app",
+    "name": "Heritcoin",
     "slug": "app",
-    "version": "1.0.1",
+    "version": "1.0.0",
+    "description": "사진 한 장으로 동전·지폐 즉시 식별 + 시세 조회 + 전문가 감정",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,9 +14,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.heritcoin.app"
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
